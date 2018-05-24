@@ -38,7 +38,5 @@ public class PlayerController : MonoBehaviour {
         //Camera Rotation
         float _xRot = Input.GetAxisRaw("Mouse Y");
         scriptMove.SetCameraRotation(_xRot * mouseSensitivity);
-
-
     }
 }
