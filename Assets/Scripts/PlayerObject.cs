@@ -5,28 +5,35 @@ using UnityEngine.Networking;
 
 public class PlayerObject : NetworkBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    public string pseudo = "NoPseudo";
+    public GameObject playerUnitPrefab;
+    GameObject myPlayerUnit;
+
+    void Start() {
         if (isLocalPlayer == false)
         {
             return;
         }
-        //Instantiate(playerUnitPrefab);
         CmdSpawnMyUnit();
-	}
-    public GameObject playerUnitPrefab;
-    GameObject myPlayerUnit;
-	// Update is called once per frame
-	void Update () {
-        /*if (isLocalPlayer == false)
+    }
+
+
+
+
+
+    void Update() {
+        if (isLocalPlayer == false)
         {
             return;
-        }*/
-
-        /*if (Input.GetKeyDown(KeyCode.Space))
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            CmdSendModification("newPseudo");
+        }
+        if (Input.GetKeyDown(KeyCode.S))
         {
             CmdMoveUnitUp();
-        }*/
+        }
     }
 
     [Command]
@@ -34,16 +41,35 @@ public class PlayerObject : NetworkBehaviour {
     {
         GameObject go = Instantiate(playerUnitPrefab);
         myPlayerUnit = go;
-        NetworkServer.SpawnWithClientAuthority(go,connectionToClient);
+        NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
     }
 
     [Command]
     void CmdMoveUnitUp()
     {
-        if(myPlayerUnit == null)
+        if (myPlayerUnit == null)
         {
             return;
         }
         myPlayerUnit.transform.Translate(0, 1, 0);
+        RpcMoveUnitUp(myPlayerUnit);
+    }
+    [ClientRpc]
+    void RpcMoveUnitUp(GameObject _playerUnit)
+    {
+        _playerUnit.transform.Translate(0, 1, 0);
+    }
+
+
+    [Command]
+    void CmdSendModification(string _name) {
+        pseudo = _name;
+        RpcSendModification(_name);
+    }
+
+    [ClientRpc]
+    void RpcSendModification(string _name)
+    {
+        pseudo=_name;
     }
 }

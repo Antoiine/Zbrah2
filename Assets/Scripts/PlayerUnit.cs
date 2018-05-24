@@ -7,8 +7,14 @@ public class PlayerUnit : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+        if (hasAuthority == false)
+        {
+            return;
+        }
+
+        Transform playerCam = this.transform.GetChild(1);
+        playerCam.gameObject.SetActive(true);
+    }
 	
 	// Update is called once per frame
 	void Update () {
