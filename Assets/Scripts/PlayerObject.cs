@@ -39,7 +39,7 @@ public class PlayerObject : NetworkBehaviour {
     [Command]
     void CmdSpawnMyUnit()
     {
-        GameObject go = Instantiate(playerUnitPrefab);
+        GameObject go = (GameObject)Instantiate(playerUnitPrefab);
         myPlayerUnit = go;
         NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
     }

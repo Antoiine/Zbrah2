@@ -7,13 +7,11 @@ public class PlayerUnit : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        if (hasAuthority == false)
+        if (hasAuthority== false)
         {
             return;
         }
-
-        Transform playerCam = this.transform.GetChild(1);
-        playerCam.gameObject.SetActive(true);
+        
     }
 	
 	// Update is called once per frame
@@ -23,7 +21,8 @@ public class PlayerUnit : NetworkBehaviour {
         {
             return;
         }
-
+        Transform playerCam = this.transform.GetChild(1);
+        playerCam.gameObject.SetActive(true);
         if (Input.GetKeyDown(KeyCode.Space))
         {
             this.transform.Translate(0, 1, 0);
