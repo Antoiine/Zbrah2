@@ -19,8 +19,7 @@ namespace Assets.Scripts.Movements
 
         private Rigidbody rb;
         private Camera cam;
-        private bool isGrounded = false;
-        
+        private bool isGrounded = false;        
 
         //Call when the scene is loaded
         public void Start()
@@ -29,7 +28,7 @@ namespace Assets.Scripts.Movements
             cam = this.GetComponentInChildren<Camera>();
         }
 
-        public void OnCollisionStay(Collision collision)
+        public void OnCollisionEnter(Collision collision)
         {
             if(collision.collider.tag == "Ground")
             {
@@ -83,15 +82,14 @@ namespace Assets.Scripts.Movements
                 //Apply our rotation to the transform of our camera
                 cam.transform.localEulerAngles = new Vector3(currentCamRotation, 0f, 0f);
             }
-
+            Debug.Log(isGrounded);
             //Jump
-            if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             {
                 isGrounded = false;
                 rb.AddForce(new Vector3(0, 5, 0), ForceMode.Impulse);
-                Debug.Log("JUMP");
-            }
-            
+                
+            }           
             
         }
 
