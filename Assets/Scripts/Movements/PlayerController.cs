@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour {
 
     public float speed = 5;
     public float mouseSensitivity = 3;
+    public float jumpHeight = 2.0f;
 
     private PlayerMovement scriptMove;
 
@@ -15,10 +16,11 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
         scriptMove = GetComponent<PlayerMovement>();
     }
-	
-	// Update is called once per frame
-	void Update () {
 
+    // Update is called once per frame
+    void Update()
+    {
+        jumpHeight = 0;
 
         //Movement "ZQSD"
         float _xMov = Input.GetAxis("Horizontal");
@@ -38,5 +40,6 @@ public class PlayerController : MonoBehaviour {
         //Camera Rotation
         float _xRot = Input.GetAxisRaw("Mouse Y");
         scriptMove.SetCameraRotation(_xRot * mouseSensitivity);
+
     }
 }

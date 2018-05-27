@@ -15,10 +15,11 @@ namespace Assets.Scripts.Movements
         private float camRotation = 0f;
         private float currentCamRotation = 0f;
         private float camRotationLimit = 85f;
+        private float jumpForce = 0f;
 
         private Rigidbody rb;
         private Camera cam;
-
+        private bool isGrounded = false;
         
 
         //Call when the scene is loaded
@@ -28,10 +29,23 @@ namespace Assets.Scripts.Movements
             cam = this.GetComponentInChildren<Camera>();
         }
 
+        public void OnCollisionStay(Collision collision)
+        {
+            if(collision.collider.tag == "Ground")
+            {
+                isGrounded = true;
+            }
+        }
+
         //Set the movement for the next frame
         public void SetMove(Vector3 _movement)
         {
             nextMove = _movement;            
+        }
+
+        public void SetJump(float _jumpForce)
+        {
+            jumpForce = _jumpForce;
         }
 
         //Set the horizontal rotation for the next frame
@@ -68,7 +82,16 @@ namespace Assets.Scripts.Movements
 
                 //Apply our rotation to the transform of our camera
                 cam.transform.localEulerAngles = new Vector3(currentCamRotation, 0f, 0f);
-            }            
+            }
+
+            //Jump
+            if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            {
+                isGrounded = false;
+                rb.AddForce(new Vector3(0, 5, 0), ForceMode.Impulse);
+                Debug.Log("JUMP");
+            }
+            
             
         }
 
