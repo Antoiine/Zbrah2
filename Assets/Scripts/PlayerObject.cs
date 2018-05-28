@@ -30,21 +30,11 @@ public class PlayerObject : NetworkBehaviour {
         {
             CmdSendModification("newPseudo");
         }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            CmdMoveUnitUp();
-        }
+
     }
 
-    [Command]
-    void CmdSpawnMyUnit()
-    {
-        GameObject go = (GameObject)Instantiate(playerUnitPrefab);
-        myPlayerUnit = go;
-        NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
-    }
-
-    [Command]
+    //Modifier la position d'un object sur le reseau, fonction CmdMoveUnitUp à call dans la fonction Update par exemple
+    /*[Command]
     void CmdMoveUnitUp()
     {
         if (myPlayerUnit == null)
@@ -58,15 +48,27 @@ public class PlayerObject : NetworkBehaviour {
     void RpcMoveUnitUp(GameObject _playerUnit)
     {
         _playerUnit.transform.Translate(0, 1, 0);
+    }*/
+
+    //Demande au réseau de spawn une entité en donnant au client "l'autorisation"
+    [Command]
+    void CmdSpawnMyUnit()
+    {
+        GameObject go = (GameObject)Instantiate(playerUnitPrefab);
+        myPlayerUnit = go;
+        NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
     }
 
+    
 
+    //Demande au serveur de modifier le name
     [Command]
     void CmdSendModification(string _name) {
         pseudo = _name;
         RpcSendModification(_name);
     }
 
+    //Propager le nouveau name du l'entité à tous les clients du reseau
     [ClientRpc]
     void RpcSendModification(string _name)
     {

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Assets.Scripts.Movements
 {
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerMovement : NetworkBehaviour
     {
         //Properties
         private Vector3 nextMove = Vector3.zero;
@@ -21,11 +22,23 @@ namespace Assets.Scripts.Movements
         private Camera cam;
         private bool isGrounded = false;        
 
+
+
+
         //Call when the scene is loaded
-        public void Start()
+        public override void OnStartAuthority()
         {
+            if (hasAuthority == false)
+            {
+                return;
+            }
             rb = this.GetComponent<Rigidbody>();
+
+            this.transform.GetChild(0).gameObject.SetActive(true);
+
             cam = this.GetComponentInChildren<Camera>();
+
+            
         }
 
         public void OnCollisionEnter(Collision collision)
@@ -63,8 +76,17 @@ namespace Assets.Scripts.Movements
         //Call once every frame
         public void FixedUpdate()
         {
+
+            if (hasAuthority == false)
+            {
+                return;
+            }
+
+            
+
+
             //Movement
-            if(nextMove != Vector3.zero)
+            if (nextMove != Vector3.zero)
             {
                 rb.MovePosition(rb.position + nextMove * Time.deltaTime);
             }
@@ -82,7 +104,6 @@ namespace Assets.Scripts.Movements
                 //Apply our rotation to the transform of our camera
                 cam.transform.localEulerAngles = new Vector3(currentCamRotation, 0f, 0f);
             }
-            Debug.Log(isGrounded);
             //Jump
             if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             {

@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : NetworkBehaviour {
 
 
     public float speed = 5;
@@ -13,13 +14,23 @@ public class PlayerController : MonoBehaviour {
     private PlayerMovement scriptMove;
 
 	// Use this for initialization
-	void Start () {
+	public override void OnStartAuthority()
+    {
+        if (hasAuthority == false)
+        {
+            return;
+        }
         scriptMove = GetComponent<PlayerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (hasAuthority == false)
+        {
+            return;
+        }
+
         jumpHeight = 0;
 
         //Movement "ZQSD"
