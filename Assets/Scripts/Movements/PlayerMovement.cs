@@ -20,8 +20,8 @@ namespace Assets.Scripts.Movements
 
         private Rigidbody rb;
         private Camera cam;
-        private bool isGrounded = false;        
-
+        private bool isGrounded = false;
+        private float lockPos = 0f;
 
 
 
@@ -81,9 +81,6 @@ namespace Assets.Scripts.Movements
             {
                 return;
             }
-
-            
-
 
             //Movement
             if (nextMove != Vector3.zero)
