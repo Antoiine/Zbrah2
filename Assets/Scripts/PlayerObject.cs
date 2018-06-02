@@ -9,6 +9,9 @@ public class PlayerObject : NetworkBehaviour {
     public GameObject playerUnitPrefab;
     GameObject myPlayerUnit;
 
+    //Le playerObject est spawn à une des spawnPositions définies dans le jeu
+
+
     void Start() {
         if (isLocalPlayer == false)
         {
@@ -50,11 +53,13 @@ public class PlayerObject : NetworkBehaviour {
         _playerUnit.transform.Translate(0, 1, 0);
     }*/
 
-    //Demande au réseau de spawn une entité en donnant au client "l'autorisation"
+    /*Demande au réseau de spawn une entité en donnant au client "l'autorisation"
+     * Le playerUnit sera spawn au même endroit que le playerObject
+    */
     [Command]
     void CmdSpawnMyUnit()
     {
-        GameObject go = (GameObject)Instantiate(playerUnitPrefab);
+        GameObject go = (GameObject)Instantiate(playerUnitPrefab,transform);
         myPlayerUnit = go;
         NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
     }
