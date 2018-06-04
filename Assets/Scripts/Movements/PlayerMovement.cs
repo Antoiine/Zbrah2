@@ -35,7 +35,7 @@ namespace Assets.Scripts.Movements
             rb = this.GetComponent<Rigidbody>();
 
             this.transform.GetChild(0).gameObject.SetActive(true);
-
+            //Debug.Log("fils : " + this.GetComponent<NetworkIdentity>().netId.ToString());
             cam = this.GetComponentInChildren<Camera>();
 
             

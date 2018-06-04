@@ -1,18 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Shotgun : MonoBehaviour {
+public class Shotgun : NetworkBehaviour {
 
     //Probablement à changer inGame
     public float range = 100f;
     public float fireRate = 2f;
     public int damagePoint = 20;
 
+
+    //Effet de lumière ou autre
+    public ParticleSystem gunFireLight;
+    Transform spawnBullet;
+
     public Camera characterCamera;
 
     public float nextTimeToFire = 0f;
 
+
+    private void Start()
+    {
+        spawnBullet = transform.GetChild(0).GetChild(0).GetChild(0).transform;
+    }
 
     // Update is called once per frame
     void Update()
@@ -25,24 +36,43 @@ public class Shotgun : MonoBehaviour {
         }
     }
 
-
+    [Client]
     void Shoot()
     {
+        //Light au moment du tir
+        CmdspawnFireEffect();
+
 
         RaycastHit _hit;
         if (Physics.Raycast(characterCamera.transform.position, characterCamera.transform.forward, out _hit, range))
         {
             if (_hit.transform.tag == "Character")
-            {
-                Debug.Log("avant"+ _hit.transform.GetComponent<Target>().currentHealthPoint);
-                _hit.transform.GetComponent<Target>().CmdTakeDamage(damagePoint);
-                Debug.Log("après" + _hit.transform.GetComponent<Target>().currentHealthPoint);
-
+            {                
+                CmdGiveDamage(damagePoint, _hit.transform.gameObject);
             }
         }
     }
 
+    //Demande au serveur de traiter les dommages
+    
+    
 
+    [Command]
+    public void CmdGiveDamage(int _damageAmount, GameObject _target)
+    {
+        _target.GetComponent<Target>().TakeDamage(_damageAmount);
+    }
+
+    [Command]
+    public void CmdspawnFireEffect()
+    {
+        Debug.Log("Spawn effect");
+        gunFireLight.Play();
+
+    }
+
+
+    /*
     void SpawnBulletParticule()
     {
         Debug.Log("spawn");
@@ -51,11 +81,11 @@ public class Shotgun : MonoBehaviour {
         GameObject bulletParticule = null;
 
         //Récupère le point de spawn des tirs (Bout du canon)
-        Transform _spawnBulletParticule = transform.GetChild(0);
+        Transform _spawnBulletParticule = transform.GetChild(0).GetChild(0).GetChild(0);
 
         //Créer les particules en jeu, suivent automatiquement le point de tir
         GameObject _currentBulletParticule = Instantiate(bulletParticule, _spawnBulletParticule.position, _spawnBulletParticule.rotation);
         _currentBulletParticule.transform.parent = _spawnBulletParticule.transform;
-    }
+    }*/
 
 }

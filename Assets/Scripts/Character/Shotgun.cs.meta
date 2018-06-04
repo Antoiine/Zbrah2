@@ -5,7 +5,10 @@ licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - gunFireLight: {fileID: 1991865501044146, guid: 8ed3b816e0f50b348b9a9570bb05dcfd,
+      type: 2}
+  - characterCamera: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

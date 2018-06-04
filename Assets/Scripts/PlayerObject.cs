@@ -18,6 +18,7 @@ public class PlayerObject : NetworkBehaviour {
             return;
         }
         CmdSpawnMyUnit();
+        //Debug.Log(this.GetComponent<NetworkIdentity>().netId.ToString());
     }
 
 
