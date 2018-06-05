@@ -19,7 +19,8 @@ namespace Assets.Scripts.Movements
         private float jumpForce = 0f;
 
         private Rigidbody rb;
-        private Camera cam;
+        //private Camera cam;
+        private Transform CamAndGum;
         private bool isGrounded = false;
         private float lockPos = 0f;
 
@@ -34,11 +35,12 @@ namespace Assets.Scripts.Movements
             }
             rb = this.GetComponent<Rigidbody>();
 
-            this.transform.GetChild(0).gameObject.SetActive(true);
-            //Debug.Log("fils : " + this.GetComponent<NetworkIdentity>().netId.ToString());
-            cam = this.GetComponentInChildren<Camera>();
+            this.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+            //cam = this.GetComponentInChildren<Camera>();
+            CamAndGum = this.transform.GetChild(0);
 
-            
+
+
         }
 
         public void OnCollisionEnter(Collision collision)
@@ -92,14 +94,14 @@ namespace Assets.Scripts.Movements
             rb.MoveRotation(rb.rotation * Quaternion.Euler(hRotation));
 
             //Camera Rotation
-            if(cam != null)
+            if(CamAndGum != null)
             {
                 // Set our rotation and clamp it
                 currentCamRotation -= camRotation;
                 currentCamRotation = Mathf.Clamp(currentCamRotation, -camRotationLimit, camRotationLimit);
 
                 //Apply our rotation to the transform of our camera
-                cam.transform.localEulerAngles = new Vector3(currentCamRotation, 0f, 0f);
+                CamAndGum.transform.localEulerAngles = new Vector3(currentCamRotation, 0f, 0f);
             }
             //Jump
             if (Input.GetKeyDown(KeyCode.Space) && isGrounded)

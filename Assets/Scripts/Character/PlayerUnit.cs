@@ -12,7 +12,7 @@ public class PlayerUnit : NetworkBehaviour {
         {
             return;
         }
-        Transform playerCam = this.transform.GetChild(1);
+        Transform playerCam = this.transform.GetChild(0);
         playerCam.gameObject.SetActive(true);
     }
 

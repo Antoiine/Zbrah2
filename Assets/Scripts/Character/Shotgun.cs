@@ -13,7 +13,9 @@ public class Shotgun : NetworkBehaviour {
 
     //Effet de lumière ou autre
     public ParticleSystem gunFireLight;
-    Transform spawnBullet;
+    public ParticleSystem smokeEffect;
+
+    public Transform spawnBullet;
 
     public Camera characterCamera;
 
@@ -22,12 +24,16 @@ public class Shotgun : NetworkBehaviour {
 
     private void Start()
     {
-        spawnBullet = transform.GetChild(0).GetChild(0).GetChild(0).transform;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (hasAuthority == false)
+        {
+            return;
+        }
 
         if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
         {
@@ -50,6 +56,10 @@ public class Shotgun : NetworkBehaviour {
             {                
                 CmdGiveDamage(damagePoint, _hit.transform.gameObject);
             }
+            else
+            {
+                RpcSpawnSmokeEffect(_hit.point,_hit.normal);
+            }
         }
     }
 
@@ -66,9 +76,30 @@ public class Shotgun : NetworkBehaviour {
     [Command]
     public void CmdspawnFireEffect()
     {
-        Debug.Log("Spawn effect");
+        Debug.Log("Fire");
         gunFireLight.Play();
+        RpcSpawnFireEffect();
+    }
 
+    [ClientRpc]
+    void RpcSpawnFireEffect()
+    {
+        gunFireLight.Play();
+    }
+
+
+    [Command]
+    public void CmdspawnSmokeEffect(Vector3 _point, Vector3 _normal)
+    {
+        Debug.Log("Smoke");
+        Instantiate(smokeEffect, _point, Quaternion.LookRotation(_normal));
+        RpcSpawnSmokeEffect(_point,_normal);
+    }
+
+    [ClientRpc]
+    void RpcSpawnSmokeEffect(Vector3 _point, Vector3 _normal)
+    {
+        Instantiate(smokeEffect, _point, Quaternion.LookRotation(_normal));
     }
 
 
