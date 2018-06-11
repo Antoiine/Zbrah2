@@ -6,16 +6,19 @@ using UnityEngine.Networking;
 public class Shotgun : NetworkBehaviour {
 
     //Probablement à changer inGame
-    public float range = 100f;
-    public float fireRate = 2f;
-    public int damagePoint = 20;
+    private float range;
+    private float fireRate;
+    private int damagePoint;
+    private int fireArm;
+    private int bulletUsed;
 
 
     //Effet de lumière ou autre
-    public ParticleSystem gunFireLight;
-    public ParticleSystem smokeEffect;
+    private ParticleSystem gunFireLight;
+    private ParticleSystem smokeEffect;
+    private ParticleSystem bulletEffect;
 
-    public Transform spawnBullet;
+    private Transform spawnBullet;
 
     public Camera characterCamera;
 
@@ -24,6 +27,24 @@ public class Shotgun : NetworkBehaviour {
 
     private void Start()
     {
+
+        //Récupère le gun du player
+        Gun playerGun = this.transform.GetChild(0).GetChild(1).GetComponent<Gun>();
+
+        //Get all gun stats
+        fireRate = playerGun.fireRate;
+        range = playerGun.range;
+        damagePoint = playerGun.damagePoint;
+        fireArm = playerGun.fireArm;
+
+        //Effect gun
+        gunFireLight = playerGun.gunFireLight;
+        smokeEffect = playerGun.smokeEffect;         
+        bulletEffect = playerGun.bulletEffect;
+
+        spawnBullet = playerGun.spawnBullet;
+       
+
     }
 
     // Update is called once per frame
@@ -37,8 +58,20 @@ public class Shotgun : NetworkBehaviour {
 
         if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
         {
-            nextTimeToFire = Time.time + 1f / fireRate;
-            Shoot();
+            //Si il reste des balles dans le chargeur
+            if (bulletUsed < fireArm){
+
+                nextTimeToFire = Time.time + 1f / fireRate;
+                Shoot();
+                bulletUsed += 1;
+            }
+            else
+            {
+                //Animation de rechargement
+                bulletUsed = 0;
+                Debug.Log("reload");
+            }
+            
         }
     }
 
@@ -58,7 +91,7 @@ public class Shotgun : NetworkBehaviour {
             }
             else
             {
-                RpcSpawnSmokeEffect(_hit.point,_hit.normal);
+                CmdspawnSmokeEffect(_hit.point,_hit.normal);
             }
         }
     }
@@ -78,13 +111,16 @@ public class Shotgun : NetworkBehaviour {
     {
         Debug.Log("Fire");
         gunFireLight.Play();
+        bulletEffect.Play();
         RpcSpawnFireEffect();
     }
+
 
     [ClientRpc]
     void RpcSpawnFireEffect()
     {
         gunFireLight.Play();
+        bulletEffect.Play();
     }
 
 
@@ -92,14 +128,16 @@ public class Shotgun : NetworkBehaviour {
     public void CmdspawnSmokeEffect(Vector3 _point, Vector3 _normal)
     {
         Debug.Log("Smoke");
-        Instantiate(smokeEffect, _point, Quaternion.LookRotation(_normal));
+        ParticleSystem smokePS = Instantiate(smokeEffect, _point, Quaternion.LookRotation(_normal));
+        Destroy(smokePS.gameObject, 0.8f);
         RpcSpawnSmokeEffect(_point,_normal);
     }
 
     [ClientRpc]
     void RpcSpawnSmokeEffect(Vector3 _point, Vector3 _normal)
     {
-        Instantiate(smokeEffect, _point, Quaternion.LookRotation(_normal));
+        ParticleSystem smokePS = Instantiate(smokeEffect, _point, Quaternion.LookRotation(_normal));
+        Destroy(smokePS.gameObject, 0.8f);
     }
 
 

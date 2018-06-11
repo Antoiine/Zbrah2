@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour {
 
+    //Probablement à changer inGame
     public float range = 100f;
+    public float fireRate = 2f;
+    public int damagePoint = 20;
+    public int fireArm = 30;
 
-    public Camera characterCamera;
+    //Effet de lumière ou autre
+    public ParticleSystem gunFireLight;
+    public ParticleSystem smokeEffect;
+    public ParticleSystem bulletEffect;
 
-	// Use this for initialization
-	void Start () {
+    public Transform spawnBullet;
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	

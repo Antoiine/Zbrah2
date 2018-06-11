@@ -20,6 +20,7 @@ namespace Assets.Scripts.Movements
 
         private Rigidbody rb;
         //private Camera cam;
+
         private Transform CamAndGum;
         private bool isGrounded = false;
         private float lockPos = 0f;
