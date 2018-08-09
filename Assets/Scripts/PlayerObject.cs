@@ -58,7 +58,7 @@ public class PlayerObject : NetworkBehaviour {
      * Le playerUnit sera spawn au même endroit que le playerObject
     */
     [Command]
-    void CmdSpawnMyUnit()
+    public void CmdSpawnMyUnit()
     {
         GameObject go = (GameObject)Instantiate(playerUnitPrefab,transform);
         myPlayerUnit = go;
@@ -80,4 +80,23 @@ public class PlayerObject : NetworkBehaviour {
     {
         pseudo=_name;
     }
+
+
+
+
+    public void KillMe(){
+        if (isLocalPlayer == false)
+        {
+            return;
+        }
+        CmdKill();
+        CmdSpawnMyUnit();
+    }
+
+    [Command]
+    void CmdKill()
+    {
+        Destroy(myPlayerUnit);        
+    }
+
 }

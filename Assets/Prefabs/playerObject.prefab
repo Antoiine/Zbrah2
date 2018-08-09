@@ -85,5 +85,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pseudo: NoPseudo
-  playerUnitPrefab: {fileID: 1189160311378820, guid: 4004ff4584ec6294b9463546eedf6184,
+  playerUnitPrefab: {fileID: 1394179710466212, guid: 89cfe6618727b2c439f8a3655349aeac,
     type: 2}
